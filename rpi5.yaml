@@ -264,7 +264,6 @@ images:
         type: vfat
         size: 512 MiB
         items:
-          "armstub8-2712.bin": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/armstub8-2712.bin"
           "bootcode.bin": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/bootcode.bin"
           "config.txt":   "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/config.txt"
           "cmdline.txt":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/cmdline.txt"
@@ -306,6 +305,11 @@ images:
           "dom0/z_blinky.bin": "%{ZEPHYR_DOMU2_DIR}/%{ZEPHYR_DOMU2_BUILD_DIR}/zephyr/zephyr.bin"
           "dom0/helloworld_xen-arm64": "domu_unikraft/helloworld_xen-arm64"
           "dom0/linux-pv-image": "%{YOCTOS_WORK_DIR}/%{DOMU_BUILD_DIR}/tmp/deploy/images/%{DOMU_MACHINE}/Image-initramfs-%{DOMU_MACHINE}.bin"
+      full:
+        gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
+        type: raw_image
+        size: 8 GiB
+        image_path: "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_IMAGE}-%{MACHINE}.rootfs.ext4"
 
 parameters:
   # Machines
@@ -321,6 +325,15 @@ parameters:
 
   DOMD_ROOT:
     desc: "Domd root device"
+    mmc:
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [DOMD_OVERLAYS, "%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"]
+                - [MACHINE_FEATURES:append, " domd_mmc"]
+                - [DOMD_BOOTARGS, "console=ttyAMA0 earlycon=xen earlyprintk=xen clk_ignore_unused root=\\\\/dev\\\\/mmcblk0p3 rootfstype=ext4 rootwait"]
     usb:
       default: true
       overrides:
