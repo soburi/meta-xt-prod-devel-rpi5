@@ -137,8 +137,8 @@ components:
         url: "https://git.yoctoproject.org/meta-raspberrypi"
         rev: "scarthgap"
       - type: git
-        url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "main"
+        url: "https://github.com/soburi/meta-xt-rpi5.git"
+        rev: "mod_main"
 
     builder:
       type: yocto
